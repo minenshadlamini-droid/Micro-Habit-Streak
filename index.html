@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4134434877055985"
+     crossorigin="anonymous"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Micro Habit Streak | Alpha Motion Studios</title>
+<meta name="description" content="Build consistency with micro habits. Track daily streaks and build habits that stick.">
+<style>
+  :root {
+    --bg:#0f1115; --card:#1a1d23; --text:#e6e6e6; --muted:#9aa0a6;
+    --accent:#4ade80; --danger:#f87171; --border:#2a2d33;
+  }
+    * { box-sizing: border-box; }
+  body {
+    margin:0; font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+    background:var(--bg); color:var(--text); line-height:1.6;
+  }
+  header, footer {
+    padding:16px 24px; background:var(--card);
+    display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;
+    border-bottom:1px solid var(--border);
+  }
+  footer { border-top:1px solid var(--border); border-bottom:none; margin-top:40px; }
+  nav a {
+    color:var(--text); text-decoration:none; margin:0 12px; opacity:0.8;
+    font-weight:500; transition:0.2s;
+  }
+  nav a:hover, nav a.active { opacity:1; color:var(--accent); }
+  main { max-width:900px; margin:32px auto; padding:0 16px; }
+ .card {
+    background:var(--card); padding:28px; border-radius:16px; margin-bottom:20px;
+    border:1px solid var(--border);
+  }
+  h1,h2,h3 { margin-top:0; line-height:1.3; }
+  h1 { font-size:2rem; }
+  button {
+    background:var(--accent); color:#111; border:none; padding:12px 20px;
+    border-radius:12px; cursor:pointer; font-weight:600; font-size:15px;
+    transition:0.2s;
+  }
+  button:hover { opacity:0.9; transform:translateY(-1px); }
+  button.danger { background:var(--danger); }
+  input, textarea {
+    width:100%; padding:12px; border-radius:10px; border:1px solid var(--border);
+    background:#111; color:var(--text); font-family:inherit; font-size:15px;
+  }
+  input:focus, textarea:focus { outline:2px solid var(--accent); border-color:transparent; }
+ .muted { color:var(--muted); font-size:14px; }
+ .contact-info { line-height:2; }
+ .contact-info a { color:var(--accent); text-decoration:none; }
+ .habit-list { list-style:none; padding:0; }
+ .habit-item {
+    display:flex; justify-content:space-between; align-items:center;
+    padding:14px; background:#111; border-radius:12px; margin-bottom:10px;
+    border:1px solid var(--border);
+  }
+ .streak-badge {
+    background:var(--accent); color:#111; padding:4px 12px;
+    border-radius:20px; font-weight:700; font-size:14px;
+  }
+ .grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(250px, 1fr)); gap:16px; }
+  hr { border:none; border-top:1px solid var(--border); margin:24px 0; }
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <strong>Micro Habit Streak</strong>
+    <span class="muted">by Alpha Motion Studios</span>
+  </div>
+  <nav>
+    <a href="#/" data-route="/">Home</a>
+    <a href="#/tracker" data-route="/tracker">Tracker</a>
+    <a href="#/articles" data-route="/articles">Articles</a>
+    <a href="#/about" data-route="/about">About</a>
+    <a href="#/contact" data-route="/contact">Contact</a>
+  </nav>
+</header>
+
+<main id="app"></main>
+
+<footer>
+  <div class="muted">© 2026 Alpha Motion Studios. All rights reserved.</div>
+  <div>
+    <a href="#/privacy">Privacy Policy</a> ·
+    <a href="#/terms">Terms of Service</a>
+  </div>
+</footer>
+
+<script>
+// Data storage
+let habits = JSON.parse(localStorage.getItem('habits') || '[]');
+
+function saveHabits() {
+  localStorage.setItem('habits', JSON.stringify(habits));
+}
+
+function addHabit(name) {
+  if (!name.trim()) return;
+  habits.push({
+    id: Date.now(),
+    name: name.trim(),
+    streak: 0,
+    lastDone: null
+  });
+  saveHabits();
+  router();
+}
+
+function completeHabit(id) {
+  const today = new Date().toDateString();
+  habits = habits.map(h => {
+    if (h.id === id && h.lastDone!== today) {
+      const yesterday = new Date();
+      yesterday.setDate(yesterday.getDate() - 1);
+      const isConsecutive = h.lastDone === yesterday.toDateString();
+      return {
+       ...h,
+        streak: isConsecutive || h.streak === 0? h.streak + 1 : 1,
+        lastDone: today
+      };
+    }
+    return h;
+  });
+  saveHabits();
+  router();
+}
+
+function deleteHabit(id) {
+  habits = habits.filter(h => h.id!== id);
+  saveHabits();
+  router();
+}
+
+// Routes
+const routes = {
+  "/": `
+    <div class="card">
+      <h1>Build Consistency with Micro Habits</h1>
+      <p class="muted">Stop relying on motivation. Start relying on systems. Micro habits are tiny actions that take under 2 minutes but compound into real change.</p>
+      <div style="margin-top:24px;">
+        <a href="#/tracker"><button>Start Tracking Now</button></a>
+        <a href="#/articles"><button style="background:#333; color:var(--text); margin-left:10px;">Learn How It Works</button></a>
+      </div>
+    </div>
+
+    <div class="grid">
+      <div class="card">
+        <h3>Small Wins</h3>
+        <p class="muted">2 pushups beats 0 pushups every time. Lower the barrier until it’s impossible to say no.</p>
+      </div>
+      <div class="card">
+        <h3>Streak Power</h3>
+        <p class="muted">Don’t break the chain. Once you hit 7 days, you’ll fight to keep it going.</p>
+      </div>
+      <div class="card">
+        <h3>100% Local</h3>
+        <p class="muted">Your data stays on your device. No accounts, no tracking, no nonsense.</p>
+      </div>
+    </div>
+  `,
+
+  "/tracker": `
+    <div class="card">
+      <h2>Your Habit Tracker</h2>
+      <p class="muted">Add habits and check them off daily. Check today’s box to keep your streak alive.</p>
+
+      <div style="display:flex; gap:10px; margin:20px 0;">
+        <input type="text" id="habitInput" placeholder="e.g. Drink water, 5 min stretch">
+        <button onclick="handleAddHabit()">Add</button>
+      </div>
+
+      <div id="habitsContainer">
+        ${habits.length === 0?
+          '<p class="muted">No habits yet. Add your first one above.</p>' :
+          `<ul class="habit-list">
+            ${habits.map(h => `
+              <li class="habit-item">
+                <div>
+                  <strong>${h.name}</strong><br>
+                  <span class="muted">Last done: ${h.lastDone || 'Never'}</span>
+                </div>
+                <div style="display:flex; align-items:center; gap:10px;">
+                  <span class="streak-badge">${h.streak} day${h.streak!== 1? 's' : ''}</span>
+                  <button onclick="completeHabit(${h.id})" ${h.lastDone === new Date().toDateString()? 'disabled style="opacity:0.5;"' : ''}>
+                    ${h.lastDone === new Date().toDateString()? 'Done' : 'Check'}
+                  </button>
+                  <button class="danger" onclick="deleteHabit(${h.id})">×</button>
+                </div>
+              </li>
+            `).join('')}
+          </ul>`
+        }
+      </div>
+    </div>
+  `,
+
+  "/articles": `
+    <div class="card">
+      <h2>Habits, Productivity & Streaks</h2>
+
+      <h3>1. Why Micro Habits Work</h3>
+      <p>Big goals fail because they require motivation. Micro habits work because they require almost none. The goal isn’t to do a lot — it’s to never miss. Once the habit is automatic, you can scale it up.</p>
+
+      <h3>2. The Psychology of Streaks</h3>
+      <p>Streaks tap into loss aversion. Once you have a 7-day chain, you don’t want to break it. This creates automatic motivation on days you don’t feel like it. The visual progress matters more than the action itself.</p>
+
+      <h3>3. How to Restart After Missing a Day</h3>
+      <p>Don’t aim for perfection. If you miss a day, reset and go again. The streak is a tool, not your identity. Missing once is a slip. Missing twice is the start of a new habit. Just show up tomorrow.</p>
+
+      <h3>4. Habit Stacking</h3>
+      <p>Attach new habits to existing ones. “After I make coffee, I’ll do 5 squats.” The existing habit becomes the trigger for the new one. This removes the need to remember.</p>
+    </div>
+  `,
+
+  "/about": `
+    <div class="card">
+      <h2>About Alpha Motion Studios</h2>
+      <p>Micro Habit Streak is built by <strong>Alpha Motion Studios</strong> for people who are tired of starting over every Monday.</p>
+      <p>We believe consistency beats intensity. Showing up for 2 minutes daily will beat a 2-hour burst once a month every time. This tool is designed to make showing up as easy as possible.</p>
+      <p>No sign-ups, no data collection, no ads. Just a simple tracker that works.</p>
+      <p class="muted">Based in Manzini, Eswatini.</p>
+    </div>
+  `,
+
+  "/contact": `
+    <div class="card">
+      <h2>Contact Alpha Motion Studios</h2>
+      <p class="muted">Questions, feedback, or partnership inquiries? Reach out directly.</p>
+      <div class="contact-info">
+        <p><strong>Email:</strong> <a href="mailto:lofistation72@gmail.com">lofistation72@gmail.com</a></p>
+        <p><strong>Phone:</strong> <a href="tel:+26879407514">+268 7940 7514</a></p>
+        <p><strong>Phone:</strong> <a href="tel:+26876214256">+268 7621 4256</a></p>
+      </div>
+      <hr>
+      <form onsubmit="handleContactSubmit(event)">
+        <label>Name<br><input type="text" name="name" required></label><br><br>
+        <label>Email<br><input type="email" name="email" required></label><br><br>
+        <label>Message<br><textarea name="message" rows="4" required></textarea></label><br><br>
+        <button type="submit">Send Message</button>
+      </form>
+      <p class="muted" id="formStatus" style="margin-top:12px;"></p>
+    </div>
+  `,
+
+  "/privacy": `
+    <div class="card">
+      <h2>Privacy Policy</h2>
+      <p><strong>Alpha Motion Studios</strong> respects your privacy. This site does not collect personal data automatically.</p>
+      <p>All habit data is stored locally in your browser using localStorage. We cannot access it, and it’s not sent to any server.</p>
+      <p>Any information submitted via the contact form is used only to respond to your inquiry and is not shared with third parties.</p>
+      <p>If you contact us by phone at +268 7940 7514 or +268 7621 4256, your number will only be used for that conversation.</p>
+      <p class="muted">Last updated: June 21, 2026</p>
+    </div>
+  `,
+
+  "/terms": `
+    <div class="card">
+      <h2>Terms of Service</h2>
+      <p>By using Micro Habit Streak, you agree to use this site operated by <strong>Alpha Motion Studios</strong> for lawful purposes only.</p>
+      <p>All content is provided “as is” without warranties. Alpha Motion Studios is not liable for decisions made based on the information provided here.</p>
+      <p>You are responsible for maintaining the confidentiality of your device and browser data.</p>
+      <p>For support, contact us at <a href="mailto:lofistation72@gmail.com">lofistation72@gmail.com</a>.</p>
+      <p class="muted">Last updated: June 21, 2026</p>
+    </div>
+  `
+};
+
+// Router
+function router() {
+  const route = location.hash.replace("#","") || "/";
+  document.getElementById("app").innerHTML = routes[route] || "<div class='card'><h2>404</h2><p>Page not found.</p></div>";
+  document.querySelectorAll("nav a").forEach(a => {
+    a.classList.toggle("active", a.getAttribute("data-route") === route);
+  });
+}
+
+function handleAddHabit() {
+  const input = document.getElementById('habitInput');
+  addHabit(input.value);
+  input.value = '';
+}
+
+function handleContactSubmit(e) {
+  e.preventDefault();
+  document.getElementById('formStatus').textContent = 'Thanks! We will reply to lofistation72@gmail.com soon.';
+  e.target.reset();
+}
+
+window.addEventListener("hashchange", router);
+window.addEventListener("load", router);
+</script>
+
+</body>
+</html>
